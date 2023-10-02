@@ -1,47 +1,32 @@
 pipeline {
     agent any
-
-    environment {
-        CONTAINER_REGISTRY= credentials('docker-hub-key')
-        CONTAINER_REPOSITORY= "prism9x"
-        APPLICATION_SOURCE_URL = 'https://github.com/prism9x/devops.git'
-        APPLICATION_NAME = "Jenkins-Demo"
-        CONTAINER_BUILD_CONTEXT = "."
-        // CONTAINER_REGISTRY_USER    = credentials('CONTAINER_REGISTRY_USER')
-        // CONTAINER_REGISTRY_PASSWORD    = credentials('CONTAINER_REGISTRY_PASSWORD')
-        APPLICATION_DOMAIN="https://example.com"
+    options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
     }
-    stages {
-        stage ('Git Checkout') {
+    environment {
+    DOCKERHUB_CREDENTIALS = credentials('docker-hub-key')
+    }
 
-            steps {
-                echo 'Git Checkout'            
-                git branch: 'master',
-                    url: "${APPLICATION_SOURCE_URL}"
-                    // credentialsId: 'githubToken'
-                script {
-                GIT_COMMIT = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
-                }
-            }
-        }
+    stages {
         stage('Build') {
             steps {
-                echo 'Building..'
-                withDockerRegistry([credentialsId: "CONTAINER_REGISTRY", url: ""]) {
-                    sh "docker build -t ${CONTAINER_REPOSITORY}/${APPLICATION_NAME}:${GIT_COMMIT} ${CONTAINER_BUILD_CONTEXT}"
-                    sh "docker push ${CONTAINER_REPOSITORY}/${APPLICATION_NAME}:${GIT_COMMIT}"
-                }
+                sh 'docker build -t prism9x/jenkins-docker-hub .'
             }
         }
-        stage('Deploy') { 
+        stage('Login') {
             steps {
-                echo 'Deploying....'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
-    }
-    post { 
-        always { 
-            cleanWs()
+        stage('Push') {
+            steps {
+                sh 'docker push prism9x/jenkins-docker-hub'
+            }
         }
-    }
+        }
+        post {
+            always {
+                sh 'docker logout'
+            }
+        }
 }
