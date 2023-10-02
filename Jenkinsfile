@@ -2,19 +2,21 @@ pipeline {
     agent any
 
     stages {
+        stage('Clone repository') {
+            steps {
+                scripts{
+                    git credentialsId: 'github', url: 'https://github.com/prism9x/devops.git'
+                }
+            }
+        }
         stage('Build') {
             steps {
-                echo 'Building..'
+                echo 'Build Images...'
             }
         }
-        stage('Test') {
+        stage('Pushing... to Docker Hub') {
             steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                echo 'Pushing... to Docker Hub'
             }
         }
     }
