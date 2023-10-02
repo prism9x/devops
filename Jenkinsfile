@@ -4,9 +4,9 @@ pipeline {
     stages {
         stage('Clone repository') {
             steps {
-                scripts{
-                    git credentialsId: 'github', url: 'https://github.com/prism9x/devops.git'
-                }
+                // Get code from a GitHub repository
+                credentialsId: 'github',
+                git url: 'https://github.com/prism9x/devops.git', branch: 'master'
             }
         }
         // stage('Build') {
