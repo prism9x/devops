@@ -9,15 +9,15 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
-            steps {
-                echo 'Build Images...'
-            }
-        }
-        stage('Pushing... to Docker Hub') {
-            steps {
-                echo 'Pushing... to Docker Hub'
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         echo 'Build Images...'
+        //     }
+        // }
+        // stage('Pushing... to Docker Hub') {
+        //     steps {
+        //         echo 'Pushing... to Docker Hub'
+        //     }
+        // }
     }
 }
