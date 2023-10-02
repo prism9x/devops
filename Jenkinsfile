@@ -1,20 +1,13 @@
 pipeline {
     agent any
-    // environment{
-    //     GITHUB_ACCESS_KEY = credentials('github')
-    //     DOCKER_HUB_ACCESS_KEY = credentials('docker-hub')
-
-    //     registry = 'prism9x/devops-automation'
-    //     dockerImage = ''
-    // }
-
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '5'))
-    }
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-hub')
+    environment{
         GITHUB_ACCESS_KEY = credentials('github')
+        DOCKER_HUB_ACCESS_KEY = credentials('docker-hub')
+
+        registry = 'prism9x/devops-automation'
+        dockerImage = ''
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -29,21 +22,21 @@ pipeline {
             }
         }
 
-        // stage('Build Images') {
-        //     steps {
-        //         scripts {
-        //             dockerImage = docker.build registry
-        //         }
-        //     }
-        // }
-        // stage('Deploy Images') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry( '', DOCKER_HUB_ACCESS_KEY ) {
-        //                     dockerImage.push()
-        //                 }
-        //         }
-        //     }
-        // }
+        stage('Build Images') {
+            steps {
+                scripts {
+                    dockerImage = docker.build registry
+                }
+            }
+        }
+        stage('Deploy Images') {
+            steps {
+                script {
+                    docker.withRegistry( '', DOCKER_HUB_ACCESS_KEY ) {
+                            dockerImage.push()
+                        }
+                }
+            }
+        }
     }
 }
