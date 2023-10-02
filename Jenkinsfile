@@ -16,20 +16,19 @@ pipeline {
         }
         stage('Build Images') {
             steps {
-                sh 'docker build -t tuongdm .'
-                // scripts {
-                //     dockerImage = docker.build registry
-                // }
+                scripts {
+                    dockerImage = docker.build registry
+                }
             }
         }
-        // stage('Deploy Images') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry( '', DOCKER_HUB_ACCESS_KEY ) {
-        //                     dockerImage.push()
-        //                 }
-        //         }
-        //     }
-        // }
+        stage('Deploy Images') {
+            steps {
+                script {
+                    docker.withRegistry( '', DOCKER_HUB_ACCESS_KEY ) {
+                            dockerImage.push()
+                        }
+                }
+            }
+        }
     }
 }
