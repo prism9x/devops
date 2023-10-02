@@ -17,7 +17,7 @@ pipeline {
         stage('Build Images') {
             steps {
                 scripts {
-                    dockerImage = docker.build registry
+                    sh 'docker build -t tuongdm .'    
                 }
             }
         }
