@@ -4,7 +4,7 @@ pipeline {
         GITHUB_ACCESS_KEY = credentials('github')
         DOCKER_HUB_ACCESS_KEY = credentials('docker-hub')
 
-        REGISTRY = "prism9x/devops-automation"
+        registry = "prism9x/devops-automation"
         dockerImage = ''
     }
     stages {
@@ -17,7 +17,7 @@ pipeline {
         stage('Build Images') {
             steps {
                 scripts {
-                    dockerImage = docker.Build REGISTRY
+                    dockerImage = docker.build registry
                 }
             }
         }
