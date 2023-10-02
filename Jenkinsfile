@@ -12,7 +12,7 @@ pipeline {
             steps {
                 deleteDir()
                 // Get code from a GitHub repository
-                git url: 'https://github.com/prism9x/devops.git', branch: 'master', credentialsd: GITHUB_ACCESS_KEY
+                git url: 'https://github.com/prism9x/devops.git', branch: 'master', credentialId: GITHUB_ACCESS_KEY
             }
         }
         stage('Build Images') {
