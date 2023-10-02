@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment{
-        GITHUB_ACCESS_KEY = credentials('github')
-        DOCKER_HUB_ACCESS_KEY = credentials('docker-hub')
+        GITHUB_ACCESS_KEY = credentials('github-key')
+        DOCKER_HUB_ACCESS_KEY = credentials('docker-hub-key')
 
         registry = 'prism9x/devops-automation'
         dockerImage = ''
