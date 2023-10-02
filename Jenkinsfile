@@ -1,12 +1,14 @@
 pipeline {
     agent any
-
+    environment{
+        GITHUB_ACCESS_KEY = credentials('github')
+        DOCKER_HUB_ACCESS_KEY = credentials('docker-hub')
+    }
     stages {
         stage('Clone repository') {
             steps {
                 // Get code from a GitHub repository
-                credentialsId: 'github',
-                git url: 'https://github.com/prism9x/devops.git', branch: 'master'
+                git url: 'https://github.com/prism9x/devops.git', branch: 'master', credentialsId: GITHUB_ACCESS_KEY
             }
         }
         // stage('Build') {
