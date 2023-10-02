@@ -15,13 +15,6 @@ pipeline {
                 git url: 'https://github.com/prism9x/devops.git', branch: 'master', credentialsId: GITHUB_ACCESS_KEY
             }
         }
-
-        stage('Build') {
-            steps {
-                sh 'docker build -t prism9x/devops-automation .'
-            }
-        }
-
         stage('Build Images') {
             steps {
                 scripts {
