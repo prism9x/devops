@@ -3,23 +3,37 @@ pipeline {
     environment{
         GITHUB_ACCESS_KEY = credentials('github')
         DOCKER_HUB_ACCESS_KEY = credentials('docker-hub')
+
+        REGISTRY = "prism9x/devops-automation"
+        dockerImage = ''
     }
     stages {
-        stage('Clone repository') {
+        stage('Checkout') {
             steps {
                 // Get code from a GitHub repository
                 git url: 'https://github.com/prism9x/devops.git', branch: 'master', credentialsId: GITHUB_ACCESS_KEY
             }
         }
-        // stage('Build') {
-        //     steps {
-        //         echo 'Build Images...'
-        //     }
-        // }
-        // stage('Pushing... to Docker Hub') {
-        //     steps {
-        //         echo 'Pushing... to Docker Hub'
-        //     }
-        // }
+        stage('Build Images') {
+            steps {
+                scripts {
+                    dockerImage = docker.Build REGISTRY + ':$BUILD_NUMBER'
+                }
+            }
+        }
+        stage('Deploy Images') {
+            steps {
+                script {
+                    docker.withRegistry( '', DOCKER_HUB_ACCESS_KEY ) {
+                            dockerImage.push()
+                        }
+                }
+            }
+        }
+        stage('Cleaning up') {
+            steps {
+                sh "docker rmi $registry:$BUILD_NUMBER"
+            }
+        }
     }
 }
